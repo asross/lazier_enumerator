@@ -1,0 +1,17 @@
+PATH
+  remote: .
+  specs:
+    lazier_enumerator (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  lazier_enumerator!
+
+BUNDLED WITH
+   1.10.6

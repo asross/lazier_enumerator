@@ -1,0 +1,2 @@
+module LazierEnumerator
+end

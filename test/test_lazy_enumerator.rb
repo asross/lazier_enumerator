@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lazier_enumerator'
+require 'lazier_enumerator/lazy'
 
 describe Enumerator::Lazy do
   it 'chains' do

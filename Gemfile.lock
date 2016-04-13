@@ -6,12 +6,16 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
+    minitest (5.8.4)
+    rake (11.1.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   lazier_enumerator!
+  minitest
+  rake
 
 BUNDLED WITH
-   1.10.6
+   1.11.2

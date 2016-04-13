@@ -11,4 +11,7 @@ Gem::Specification.new do |s|
   s.summary     = "Lazy helpers for compact, uniq, and flatten"
   s.description = ""
   s.license     = "MIT"
+
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'minitest'
 end

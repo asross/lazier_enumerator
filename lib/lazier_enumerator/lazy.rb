@@ -12,8 +12,8 @@ class Enumerator::Lazy
   end
 
   def uniq(&block)
-    seen = Set.new
-    by = block_given? ? block : ->(v){v}
-    select { |v| seen.add?(by.call(v)) }
+    set = Set.new
+    fn = block || ->(v) { v }
+    select { |v| set.add?(fn.call(v)) }
   end
 end

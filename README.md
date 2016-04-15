@@ -19,6 +19,12 @@ require 'lazier_enumerator'
 enumerable.lazy.flatten.compact.uniq.map(&:uppercase).force
 ```
 
+after running
+
+```sh
+gem install lazier_enumerator
+```
+
 which will do the same thing, but lazily, only loading one element of
 `enumerable` at a time and only looping through it once.
 

@@ -83,7 +83,9 @@ module Enumerable
     lselect(not_previously_seen, &block)
   end
 
-  private def even_lazier(type, *args, &block)
+  private
+
+  def even_lazier(type, *args, &block)
     enum = LazierEnumerator::EvenLazier.send(:"#{type}_enumerator", self, *args, &block)
     block_given? ? enum.to_a : enum
   end

@@ -1,44 +1,45 @@
-# Lazier Enumerator / Enumerably
+# Lazier Enumerators [![Build Status](https://api.travis-ci.org/asross/lazier_enumerator.svg)](https://travis-ci.org/asross/lazier_enumerator)
 
-Expressions like this
+This library adds support for `uniq`, `flatten`, and `compact` to Ruby 2.0's
+[`Enumerator::Lazy`](http://ruby-doc.org/core-2.0.0/Enumerator/Lazy.html).
+
+## Basic Usage
+
+Instead of
 
 ```ruby
-array.compact.uniq.map(&:uppercase)
+enumerable.flatten.compact.uniq.map(&:uppercase)
 ```
 
-iterate through the original `array` multiple times, when their actual goals
-could be accomplished in one pass.
-
-The normal Ruby way of doing this would be either an `each_with_object` or a
-lazy enumerator, but both of those techniques are a bit verbose:
+which would loop through the `enumerable` multiple times, you can do
 
 ```ruby
-# each_with_object way
-already_seen = Set.new
-array.each_with_object([]) do |el, array|
-  if !el.nil? && already_seen.add?(el)
-    array << el.uppercase
-  end
+require 'lazier_enumerator'
+
+enumerable.lazy.flatten.compact.uniq.map(&:uppercase).force
+```
+
+which will do the same thing, but lazily, only loading one element of
+`enumerable` at a time and only looping through it once.
+
+In practice, based on benchmarks of this library and `Enumerator::Lazy` itself,
+for most enumerables lazy enumeration is actually ~2x slower than normal
+enumeration -- so use this library with a grain of salt :)
+
+## If you want something even lazier (and slower)
+
+You can require `lazier_enumerator/even_lazier`, which will define additional
+methods on `Enumerable` to provide lazy support for a variety of operations --
+but in practice they take ~10x longer than their industrious versions.
+
+```ruby
+require 'lazier_enumerator/even_lazier'
+
+# pass procs or symbols, not blocks, to lmap/lselect/lreject
+
+[1,-2,[3,nil,[4]]].lflatten.lcompact.luniq.lmap(:abs).lselect(:even?).each do |i|
+  puts i
 end
 
-# lazy way
-already_seen = Set.new
-array.lazy.
-  reject(&:nil?).
-  select { |el| already_seen.add?(el) }.
-  map(&:uppercase).
-  force
+# => 2 4
 ```
-
-Instead, this library allows you to do:
-
-```ruby
-# lazier way
-array.lazy.compact.uniq.map(&:uppercase).force
-
-# even lazier way
-array.compactly.uniquely.map(&:uppercase)
-```
-
-and much, much more by providing chainable lazy (and industrious) enumerators
-for `compact`, `uniq`, and `flatten`.

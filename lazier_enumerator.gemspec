@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Andrew Ross"]
   s.email       = ["andrewslavinross@gmail.com"]
   s.homepage    = "http://github.com/asross/lazier_enumerator"
-  s.summary     = "Lazy helpers for compact, uniq, and flatten"
-  s.description = ""
+  s.summary     = "Enumerator::Lazy support for compact, uniq, and flatten"
+  s.description = "Enumerator::Lazy support for compact, uniq, and flatten"
   s.license     = "MIT"
 
   s.add_development_dependency 'rake'

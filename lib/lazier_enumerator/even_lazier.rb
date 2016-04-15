@@ -1,51 +1,53 @@
 require 'set'
 
-module LazierEnumerator::EvenLazier
-  def self.map_enumerator(enumerable, fn, &block)
-    real_enum = enumerable.each
+module LazierEnumerator
+  module EvenLazier
+    def self.map_enumerator(enumerable, fn, &block)
+      real_enum = enumerable.each
 
-    Enumerator.new do |yielder|
-      loop do
-        value = fn.call(real_enum.next)
-        value = yield(value) if block_given?
-        yielder << value
-      end
-    end
-  end
-
-  def self.select_enumerator(enumerable, fn, &block)
-    real_enum = enumerable.each
-
-    Enumerator.new do |yielder|
-      loop do
-        value = real_enum.next
-        value = yield(value) if block_given?
-        yielder << value if fn.call(value)
-      end
-    end
-  end
-
-  def self.flat_enumerator(enumerable, &block)
-    stack = [enumerable.each]
-
-    next_value = ->() {
-      raise StopIteration if stack.empty?
-      begin
-        stack.last.next
-      rescue StopIteration
-        stack.pop
-        next_value.call()
-      end
-    }
-
-    Enumerator.new do |yielder|
-      loop do
-        value = next_value.call()
-        value = yield(value) if block_given?
-        if value.is_a?(Enumerable)
-          stack << value.each
-        else
+      Enumerator.new do |yielder|
+        loop do
+          value = fn.call(real_enum.next)
+          value = yield(value) if block_given?
           yielder << value
+        end
+      end
+    end
+
+    def self.select_enumerator(enumerable, fn, &block)
+      real_enum = enumerable.each
+
+      Enumerator.new do |yielder|
+        loop do
+          value = real_enum.next
+          value = yield(value) if block_given?
+          yielder << value if fn.call(value)
+        end
+      end
+    end
+
+    def self.flat_enumerator(enumerable, &block)
+      stack = [enumerable.each]
+
+      next_value = ->() {
+        raise StopIteration if stack.empty?
+        begin
+          stack.last.next
+        rescue StopIteration
+          stack.pop
+          next_value.call()
+        end
+      }
+
+      Enumerator.new do |yielder|
+        loop do
+          value = next_value.call()
+          value = yield(value) if block_given?
+          if value.is_a?(Enumerable)
+            stack << value.each
+          else
+            yielder << value
+          end
         end
       end
     end

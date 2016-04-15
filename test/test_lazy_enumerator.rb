@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require 'lazier_enumerator/lazy'
+require 'lazier_enumerator'
 
 describe Enumerator::Lazy do
   it 'uniq' do

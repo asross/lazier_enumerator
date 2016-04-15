@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 
-require 'lazier_enumerator/lazy'
+require 'lazier_enumerator'
 require 'lazier_enumerator/even_lazier'
 require 'benchmark'
 
 def benchmark(enum_proc)
   Benchmark.bm do |x|
     enum = enum_proc.call().to_a
-    x.report('non-lazy') {
+    x.report('non-lazy ') {
       enum.compact.map(&:upcase)
     }
 

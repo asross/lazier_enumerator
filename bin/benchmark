@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+
+require 'lazier_enumerator/lazy'
+require 'lazier_enumerator/even_lazier'
+require 'benchmark'
+
+def benchmark(enum_proc)
+  Benchmark.bm do |x|
+    enum = enum_proc.call().to_a
+    x.report('non-lazy') {
+      enum.compact.map(&:upcase)
+    }
+
+    enum = enum_proc.call()
+    x.report('semi-lazy') {
+      enum.lcompact.luniq.map(&:upcase)
+    }
+
+    enum = enum_proc.call()
+    x.report('full-lazy') {
+      enum.lazy.compact.map(&:upcase).force
+    }
+  end
+end
+
+alphabet = ('a'..'z').to_a
+s1 = alphabet.sample(10000).join
+s2 = alphabet.sample(5000).join
+s3 = alphabet.sample(7000).join
+possibilities = [s1, s1, s2, s3, nil]
+array = 1_000_000.times.map { possibilities.sample }
+File.open('/tmp/lazier-benchmark-test', 'w') { |f| f.write array.join("\n") }
+
+benchmark(->() { array })
+
+benchmark(->() {
+  File.open('/tmp/lazier-benchmark-test', 'r').each_line
+})
